@@ -14,6 +14,7 @@ public class Tag {
 
     @Column(nullable = false, unique = true)
     private String name;
+    
     @ManyToMany(mappedBy = "tags")
     private List<Task> tasks;
 }
