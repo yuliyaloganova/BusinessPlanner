@@ -3,5 +3,4 @@ com\businessplanner\models\TaskStatus.class
 com\businessplanner\main.class
 com\businessplanner\models\Task.class
 com\businessplanner\models\TaskTag.class
-com\businessplanner\MyApplication.class
 com\businessplanner\models\User.class
