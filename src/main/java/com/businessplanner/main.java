@@ -8,7 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
 public class main{
@@ -16,8 +16,8 @@ public class main{
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    //@Autowired
+    //private PasswordEncoder passwordEncoder;
 
     public static void main(String[] args) {
         SpringApplication.run(main.class, args);
@@ -39,14 +39,14 @@ public class main{
             // Проверяем пароль
             String rawPassword = "password123"; // Введённый пароль
             String hashedPassword = user.getPassword(); // Хешированный пароль из базы данных
-
+            /*
             boolean isMatch = passwordEncoder.matches(rawPassword, hashedPassword);
             System.out.println("Пароль совпадает: " + isMatch);
 
             // Проверяем неверный пароль
             String wrongPassword = "wrongpassword";
             boolean isWrongMatch = passwordEncoder.matches(wrongPassword, hashedPassword);
-            System.out.println("Неверный пароль совпадает: " + isWrongMatch);
+            System.out.println("Неверный пароль совпадает: " + isWrongMatch); */
         };
     }
 }
