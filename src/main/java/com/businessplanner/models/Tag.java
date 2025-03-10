@@ -17,4 +17,8 @@ public class Tag {
     
     @ManyToMany(mappedBy = "tags")
     private List<Task> tasks;
+    
+    public void setName(String name) {
+        this.name = name;
+    }
 }

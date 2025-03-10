@@ -1,3 +1,9 @@
+package com.businessplanner;
+
+import com.businessplanner.models.*;
+import com.businessplanner.repositories.*;
+import com.businessplanner.services.TaskService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,24 +12,53 @@ import org.springframework.context.annotation.Bean;
 import java.time.LocalDateTime;
 
 @SpringBootApplication
-public class CreateTableTaskTagTest {
+public class BusinessPlannerApplication {
+
+   // @Autowired
+   // private UserService userService;
+
+    @Autowired
+    private TaskService taskService;
+
+    @Autowired
+    private TaskRepository taskRepository;
+
+    @Autowired
+    private TagRepository tagRepository;
+
+    @Autowired
+    private TaskTagRepository taskTagRepository;
 
     public static void main(String[] args) {
-        SpringApplication.run(CreateTableTaskTagTest.class, args);
+        SpringApplication.run(BusinessPlannerApplication.class, args);
     }
 
     @Bean
-    public CommandLineRunner demo(TaskTagRepository taskTagRepository, TaskRepository taskRepository, TagRepository tagRepository) {
+    public CommandLineRunner demo(TaskRepository taskRepository) {
         return (args) -> {
-            // Создаём тестовые задачи и теги
+            // Создаём пользователя
+            /*User user = new User();
+            user.setName("John Doer");
+            user.setEmail("john.doe@example1.com");
+            user.setPassword("password124"); // Пароль будет хеширован
+
+            // Сохраняем пользователя в базу данных
+            userService.createUser(user);
+            System.out.println("Пользователь создан: " + user);*/
+
+            // Создаём задачи
             Task task1 = new Task();
             task1.setName("Task 1");
-            taskRepository.save(task1);
+            System.out.println("task1 создан: " + task1);
+            //taskRepository.save(task1);
+            taskService.createTask(task1);
+            
 
             Task task2 = new Task();
             task2.setName("Task 2");
             taskRepository.save(task2);
 
+            // Создаём теги
             Tag tag1 = new Tag();
             tag1.setName("Tag 1");
             tagRepository.save(tag1);

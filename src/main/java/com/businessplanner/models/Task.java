@@ -38,6 +38,16 @@ public class Task {
         inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
     private List<Tag> tags;
+
+    
+
+    public String getName() {
+        return title;
+    }
+
+    public void setName(String name) {
+        this.title = name;
+    }
 }
 /*
 public enum TaskStatus {
