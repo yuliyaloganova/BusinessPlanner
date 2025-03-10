@@ -2,23 +2,21 @@ package com.businessplanner;
 
 import com.businessplanner.models.*;
 import com.businessplanner.repositories.*;
-import com.businessplanner.services.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.LocalDateTime;
+//import java.time.LocalDate;
+//import java.util.Set;
 
 @SpringBootApplication
 public class BusinessPlannerApplication {
 
-   // @Autowired
-   // private UserService userService;
-
     @Autowired
-    private TaskService taskService;
+    private UserRepository userRepository;
 
     @Autowired
     private TaskRepository taskRepository;
@@ -29,46 +27,57 @@ public class BusinessPlannerApplication {
     @Autowired
     private TaskTagRepository taskTagRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public static void main(String[] args) {
         SpringApplication.run(BusinessPlannerApplication.class, args);
     }
 
     @Bean
-    public CommandLineRunner demo(TaskRepository taskRepository) {
+    public CommandLineRunner demo() {
         return (args) -> {
-            // Создаём пользователя
-            /*User user = new User();
-            user.setName("John Doer");
-            user.setEmail("john.doe@example1.com");
-            user.setPassword("password124"); // Пароль будет хеширован
+            // Создаём тестовых пользователей
+            User user1 = new User();
+            user1.setName("John Doe");
+            user1.setEmail("john.doe@example.com");
+            user1.setPassword(passwordEncoder.encode("password123"));
+            userRepository.save(user1);
 
-            // Сохраняем пользователя в базу данных
-            userService.createUser(user);
-            System.out.println("Пользователь создан: " + user);*/
+            User user2 = new User();
+            user2.setName("Jane Smith");
+            user2.setEmail("jane.smith@example.com");
+            user2.setPassword(passwordEncoder.encode("password456"));
+            userRepository.save(user2);
 
-            // Создаём задачи
+            // Создаём тестовые задачи
             Task task1 = new Task();
-            task1.setName("Task 1");
-            System.out.println("task1 создан: " + task1);
-            //taskRepository.save(task1);
-            taskService.createTask(task1);
-            
+            task1.setTitle("Task 1");
+            task1.setDescription("Description for Task 1");
+            //task1.setDueDate(LocalDate.of(2023, 12, 1));
+            //task1.setStatus("IN_PROGRESS");
+            task1.setCreator(user1);
+            taskRepository.save(task1);
 
             Task task2 = new Task();
-            task2.setName("Task 2");
+            task2.setTitle("Task 2");
+            task2.setDescription("Description for Task 2");
+            //task2.setDueDate(LocalDate.of(2023, 12, 15));
+            //task2.setStatus("TODO");
+            task2.setCreator(user2);
             taskRepository.save(task2);
 
-            // Создаём теги
+            // Создаём тестовые теги
             Tag tag1 = new Tag();
-            tag1.setName("Tag 1");
+            tag1.setName("Urgent");
             tagRepository.save(tag1);
 
             Tag tag2 = new Tag();
-            tag2.setName("Tag 2");
+            tag2.setName("Important");
             tagRepository.save(tag2);
 
             Tag tag3 = new Tag();
-            tag3.setName("Tag 3");
+            tag3.setName("Low Priority");
             tagRepository.save(tag3);
 
             // Создаём связи между задачами и тегами
@@ -87,11 +96,7 @@ public class BusinessPlannerApplication {
             taskTag3.setTag(tag3);
             taskTagRepository.save(taskTag3);
 
-            // Выводим информацию о созданных связях
-            System.out.println("Созданы связи между задачами и тегами:");
-            taskTagRepository.findAll().forEach(tt -> {
-                System.out.println("Task: " + tt.getTask().getName() + ", Tag: " + tt.getTag().getName());
-            });
+            System.out.println("Таблицы созданы и заполнены тестовыми данными.");
         };
     }
 }

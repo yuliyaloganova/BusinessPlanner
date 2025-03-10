@@ -15,21 +15,25 @@ public class TagController {
     @Autowired
     private TagService tagService;
 
+    // Создать тег
     @PostMapping
     public Tag createTag(@RequestBody Tag tag) {
         return tagService.createTag(tag);
     }
 
+    // Получить тег по id
     @GetMapping("/{id}")
     public Optional<Tag> getTagById(@PathVariable Long id) {
         return tagService.getTagById(id);
     }
 
+    // Удалить тег по id
     @DeleteMapping("/{id}")
     public void deleteTag(@PathVariable Long id) {
         tagService.deleteTag(id);
     }
 
+    // Получить все теги
     @GetMapping
     public List<Tag> getAllTags() {
         return tagService.getAllTags();

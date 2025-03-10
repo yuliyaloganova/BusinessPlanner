@@ -7,7 +7,6 @@ com\businessplanner\services\TagService.class
 com\businessplanner\controllers\TaskController.class
 com\businessplanner\models\Tag.class
 com\businessplanner\models\TaskStatus.class
-com\businessplanner\main.class
 com\businessplanner\models\Task.class
 com\businessplanner\controllers\UserController.class
 com\businessplanner\models\TaskTag.class

@@ -14,22 +14,27 @@ public class TaskService {
     @Autowired
     private TaskRepository taskRepository;
 
+    // Создать задачу
     public Task createTask(Task task) {
         return taskRepository.save(task);
     }
 
+    // Получить задачу по id
     public Optional<Task> getTaskById(Long id) {
         return taskRepository.findById(id);
     }
 
+    // Получить задачи по id создателя
     public List<Task> getTasksByCreatorId(Long creatorId) {
         return taskRepository.findByCreatorId(creatorId);
     }
 
+    // Удалить задачу по id
     public void deleteTask(Long id) {
         taskRepository.deleteById(id);
     }
 
+    // Получить все задачи
     public List<Task> getAllTasks() {
         return taskRepository.findAll();
     }
