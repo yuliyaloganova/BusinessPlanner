@@ -53,7 +53,7 @@ public class TaskService {
         Tag tag = tagRepository.findByName(tagName)
                 .orElseThrow(() -> new RuntimeException("Tag not found with id: " + tagName));
 
-        List<Task> userTasks = taskRepository.findByCreator(user);
+        List<Task> userTasks = taskRepository.findByCreatorId(user.getId());
         //List<Task> userTasks = taskRepository.findByCreator(user);
        
 
