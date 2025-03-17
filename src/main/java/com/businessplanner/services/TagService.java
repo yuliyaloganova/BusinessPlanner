@@ -2,6 +2,7 @@ package com.businessplanner.services;
 
 import com.businessplanner.models.Tag;
 import com.businessplanner.repositories.TagRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,8 +30,16 @@ public class TagService {
         tagRepository.deleteById(id);
     }
 
+    // Обновить тег
+    public Tag updateTag(Long id, Tag tagDetails) {
+        Tag tag = tagRepository.findById(id).orElseThrow(() -> new RuntimeException("Tag not found"));
+        tag.setName(tagDetails.getName());
+        return tagRepository.save(tag);
+    }
+
     // Получить все теги
     public List<Tag> getAllTags() {
         return tagRepository.findAll();
     }
+
 }

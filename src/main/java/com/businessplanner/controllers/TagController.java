@@ -3,13 +3,13 @@ package com.businessplanner.controllers;
 import com.businessplanner.models.Tag;
 import com.businessplanner.services.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/tags")
+@RequestMapping("/api/tags")
 public class TagController {
 
     @Autowired
@@ -21,16 +21,26 @@ public class TagController {
         return tagService.createTag(tag);
     }
 
-    // Получить тег по id
-    @GetMapping("/{id}")
-    public Optional<Tag> getTagById(@PathVariable Long id) {
-        return tagService.getTagById(id);
+    // Обновить тег
+    @PutMapping("/{id}")
+    public ResponseEntity<Tag> updateTag(@PathVariable Long id, @RequestBody Tag tagDetails) {
+        Tag updatedTag = tagService.updateTag(id, tagDetails);
+        return ResponseEntity.ok(updatedTag);
     }
 
-    // Удалить тег по id
+    // Получить тег по ID
+    @GetMapping("/{id}")
+    public ResponseEntity<Tag> getTagById(@PathVariable Long id) {
+        return tagService.getTagById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    // Удалить тег
     @DeleteMapping("/{id}")
-    public void deleteTag(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteTag(@PathVariable Long id) {
         tagService.deleteTag(id);
+        return ResponseEntity.noContent().build();
     }
 
     // Получить все теги

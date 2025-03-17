@@ -35,9 +35,23 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
+    // Обновить пользователя
+    public User updateUser(Long id, User userDetails) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        user.setName(userDetails.getName());
+        user.setEmail(userDetails.getEmail());
+        user.setPassword(userDetails.getPassword());
+        return userRepository.save(user);
+    }
+
     // Проверить, существует ли пользователь с указанным email
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    // Удалить пользователя
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
     }
 
     // Удалить пользователя по email

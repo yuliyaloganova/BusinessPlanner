@@ -2,18 +2,33 @@ package com.businessplanner;
 
 import com.businessplanner.models.*;
 import com.businessplanner.repositories.*;
+import com.businessplanner.services.TagService;
+import com.businessplanner.services.TaskService;
+import com.businessplanner.services.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
+import java.util.Optional;
 //import java.time.LocalDate;
-//import java.util.Set;
+import java.util.Set;
 
 @SpringBootApplication
 public class BusinessPlannerApplication {
+
+    @Autowired
+    private TagService tagService;
+
+    @Autowired
+    private TaskService taskService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private UserRepository userRepository;
@@ -27,8 +42,8 @@ public class BusinessPlannerApplication {
     @Autowired
     private TaskTagRepository taskTagRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+   // @Autowired
+    //private PasswordEncoder passwordEncoder;
 
     public static void main(String[] args) {
         SpringApplication.run(BusinessPlannerApplication.class, args);
@@ -37,17 +52,21 @@ public class BusinessPlannerApplication {
     @Bean
     public CommandLineRunner demo() {
         return (args) -> {
-            // Создаём тестовых пользователей
+            /*// Создаём тестовых пользователей
             User user1 = new User();
             user1.setName("John Doe");
             user1.setEmail("john.doe@example.com");
-            user1.setPassword(passwordEncoder.encode("password123"));
+            //user1.setPassword(passwordEncoder.encode("password123"));
+            user1.setPassword("password123");
+
             userRepository.save(user1);
 
             User user2 = new User();
             user2.setName("Jane Smith");
             user2.setEmail("jane.smith@example.com");
-            user2.setPassword(passwordEncoder.encode("password456"));
+            //user2.setPassword(passwordEncoder.encode("password456"));
+            user2.setPassword("password456");
+
             userRepository.save(user2);
 
             // Создаём тестовые задачи
@@ -96,7 +115,40 @@ public class BusinessPlannerApplication {
             taskTag3.setTag(tag3);
             taskTagRepository.save(taskTag3);
 
-            System.out.println("Таблицы созданы и заполнены тестовыми данными.");
+            System.out.println("Таблицы созданы и заполнены тестовыми данными.");*/
+
+            /*Long userId = 1L;
+            List<Task> tasksForUser1 = taskService.getTasksByCreatorId(userId);
+            System.out.println("Задачи для пользователя John Doe:");
+            tasksForUser1.forEach(task -> System.out.println(
+                "ID: " + task.getId() + 
+                ", Название: " + task.getTitle() + 
+                ", Описание: " + task.getDescription()
+            ));
+
+            userId = 2L;
+            List<Task> tasksForUser2 = taskService.getTasksByCreatorId(userId);
+            System.out.println("Задачи для пользователя Jane Smith:");
+            tasksForUser2.forEach(task -> System.out.println(
+                "ID: " + task.getId() + 
+                ", Название: " + task.getTitle() + 
+                ", Описание: " + task.getDescription()
+            ));
+
+            String userEmail= "john.doe@example.com";
+            Optional<User> users1 = userService.getUserByEmail(userEmail);
+            System.out.println("пользователь с почтой john.doe@example.com");*/
+            String email = "john.doe@example.com";
+            String tagName = "Urgent";
+            List<Task> tasks = taskService.getTasksByUserEmailAndTag(email, tagName);
+
+            System.out.println("Задачи для пользователя " + email + " с тегом '" + tagName + "':");
+            tasks.forEach(task -> System.out.println(
+                "ID: " + task.getId() + 
+                ", Название: " + task.getTitle() + 
+                ", Описание: " + task.getDescription()
+            ));
+            
         };
     }
 }

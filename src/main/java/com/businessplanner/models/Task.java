@@ -3,6 +3,7 @@ package com.businessplanner.models;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 //import com.businessplanner.models.TaskStatus;
 
@@ -27,6 +28,9 @@ public class Task {
     @JoinColumn(name = "creator_id", nullable = false)
     private User creator;
 
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TaskTag> taskTags = new ArrayList<>();
+
     @ManyToMany
     @JoinTable(
         name = "task_tags",
@@ -34,6 +38,14 @@ public class Task {
         inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
     private List<Tag> tags;
+
+    public List<TaskTag> getTaskTags() {
+        return taskTags;
+    }
+
+    public void setTaskTags(List<TaskTag> taskTags) {
+        this.taskTags = taskTags;
+    }
 }
 
 /*public enum TaskStatus {

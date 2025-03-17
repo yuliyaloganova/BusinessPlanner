@@ -1,4 +1,5 @@
 com\businessplanner\repositories\TaskTagRepository.class
+com\businessplanner\services\TaskTagService.class
 com\businessplanner\services\UserService.class
 com\businessplanner\controllers\TagController.class
 com\businessplanner\repositories\TaskRepository.class
@@ -7,7 +8,9 @@ com\businessplanner\services\TagService.class
 com\businessplanner\controllers\TaskController.class
 com\businessplanner\models\Tag.class
 com\businessplanner\models\TaskStatus.class
+com\businessplanner\BusinessPlannerApplication.class
 com\businessplanner\models\Task.class
+com\businessplanner\controllers\TaskTagController.class
 com\businessplanner\controllers\UserController.class
 com\businessplanner\models\TaskTag.class
 com\businessplanner\repositories\UserRepository.class
