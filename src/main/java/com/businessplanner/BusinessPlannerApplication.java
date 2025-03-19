@@ -11,12 +11,11 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-//import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
 //import java.time.LocalDate;
-import java.util.Set;
+//import java.util.Set;
 
 @SpringBootApplication
 public class BusinessPlannerApplication {
@@ -42,8 +41,6 @@ public class BusinessPlannerApplication {
     @Autowired
     private TaskTagRepository taskTagRepository;
 
-   // @Autowired
-    //private PasswordEncoder passwordEncoder;
 
     public static void main(String[] args) {
         SpringApplication.run(BusinessPlannerApplication.class, args);
@@ -52,7 +49,7 @@ public class BusinessPlannerApplication {
     @Bean
     public CommandLineRunner demo() {
         return (args) -> {
-            /*// Создаём тестовых пользователей
+            // Создаём тестовых пользователей
             User user1 = new User();
             user1.setName("John Doe");
             user1.setEmail("john.doe@example.com");
@@ -115,9 +112,9 @@ public class BusinessPlannerApplication {
             taskTag3.setTag(tag3);
             taskTagRepository.save(taskTag3);
 
-            System.out.println("Таблицы созданы и заполнены тестовыми данными.");*/
+            System.out.println("Таблицы созданы и заполнены тестовыми данными.");
 
-            /*Long userId = 1L;
+            Long userId = 1L;
             List<Task> tasksForUser1 = taskService.getTasksByCreatorId(userId);
             System.out.println("Задачи для пользователя John Doe:");
             tasksForUser1.forEach(task -> System.out.println(
@@ -134,10 +131,10 @@ public class BusinessPlannerApplication {
                 ", Название: " + task.getTitle() + 
                 ", Описание: " + task.getDescription()
             ));
-
-            String userEmail= "john.doe@example.com";
+            System.out.println("end of 1st test");
+            /*String userEmail= "john.doe@example.com";
             Optional<User> users1 = userService.getUserByEmail(userEmail);
-            System.out.println("пользователь с почтой john.doe@example.com");*/
+            System.out.println("пользователь с почтой john.doe@example.com");
             String email = "john.doe@example.com";
             String tagName = "Urgent";
             List<Task> tasks = taskService.getTasksByUserEmailAndTag(email, tagName);
@@ -147,7 +144,21 @@ public class BusinessPlannerApplication {
                 "ID: " + task.getId() + 
                 ", Название: " + task.getTitle() + 
                 ", Описание: " + task.getDescription()
+            ));*/
+            System.out.println("start of 2nd test AAAAAAAAAAAA");
+            // Получаем задачи для пользователя с email "jane.smith@example.com" и тегом с ID = 1
+            String email = "jane.smith@example.com";
+            Long tagId = 3L;
+            System.out.println("vot tut AAAAAAAAAAAA");
+            List<Task> tasks = taskService.getTasksByUserEmailAndTagId(email, tagId);
+
+            System.out.println("Задачи для пользователя " + email + " с тегом (ID: " + tagId + "):");
+            tasks.forEach(task -> System.out.println(
+                "ID: " + task.getId() + 
+                ", Название: " + task.getTitle() + 
+                ", Описание: " + task.getDescription()
             ));
+            System.out.println("end of 2nd test AAAAAAAAAAAA");
             
         };
     }
