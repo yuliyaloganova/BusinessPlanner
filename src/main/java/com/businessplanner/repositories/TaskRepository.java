@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findByCreatorId(Long creatorId);
-    List<Task> findByEmail(String email);
+    //List<Task> findByEmail(String email);
     //List<Task> findByCreator(String email);
     List<Task> findByCreator(User creator);
 

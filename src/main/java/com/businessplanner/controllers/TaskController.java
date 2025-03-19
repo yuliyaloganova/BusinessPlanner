@@ -54,4 +54,12 @@ public class TaskController {
     public List<Task> getAllTasks() {
         return taskService.getAllTasks();
     }
+
+    @GetMapping("/user/{email}/tag/{tagId}")
+    public ResponseEntity<List<Task>> getTasksByUserEmailAndTagId(
+            @PathVariable String email,
+            @PathVariable Long tagId) {
+        List<Task> tasks = taskService.getTasksByUserEmailAndTagId(email, tagId);
+        return ResponseEntity.ok(tasks);
+    }
 }
