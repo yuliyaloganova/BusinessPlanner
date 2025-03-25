@@ -12,6 +12,9 @@ public class TaskTag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Version 
+    private Long version;
+
     @ManyToOne
     @JoinColumn(name = "task_id", nullable = false)
     private Task task;

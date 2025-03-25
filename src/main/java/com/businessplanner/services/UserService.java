@@ -2,6 +2,9 @@ package com.businessplanner.services;
 
 import com.businessplanner.models.User;
 import com.businessplanner.repositories.UserRepository;
+
+import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -55,6 +58,7 @@ public class UserService {
     }
 
     // Удалить пользователя по email
+    @Transactional
     public void deleteUserByEmail(String email) {
         userRepository.deleteByEmail(email);
     }

@@ -83,6 +83,18 @@ public class BusinessPlannerApplication {
             task2.setCreator(user2);
             taskRepository.save(task2);
 
+            Task task3 = new Task();
+            task3.setTitle("Task 3");
+            task3.setDescription("Description for Task 3");
+            task3.setCreator(user1);
+            taskRepository.save(task3);
+
+            Task task4 = new Task();
+            task4.setTitle("Task 4");
+            task4.setDescription("Description for Task 4");
+            task4.setCreator(user1);
+            taskRepository.save(task4);
+
             // Создаём тестовые теги
             Tag tag1 = new Tag();
             tag1.setName("Urgent");
@@ -112,6 +124,16 @@ public class BusinessPlannerApplication {
             taskTag3.setTag(tag3);
             taskTagRepository.save(taskTag3);
 
+            TaskTag taskTag4 = new TaskTag();
+            taskTag4.setTask(task3);
+            taskTag4.setTag(tag3);
+            taskTagRepository.save(taskTag4);
+
+            TaskTag taskTag5 = new TaskTag();
+            taskTag5.setTask(task4);
+            taskTag5.setTag(tag1);
+            taskTagRepository.save(taskTag5);
+
             System.out.println("Таблицы созданы и заполнены тестовыми данными.");
 
             Long userId = 1L;
@@ -132,6 +154,7 @@ public class BusinessPlannerApplication {
                 ", Описание: " + task.getDescription()
             ));
             System.out.println("end of 1st test");
+
             /*String userEmail= "john.doe@example.com";
             Optional<User> users1 = userService.getUserByEmail(userEmail);
             System.out.println("пользователь с почтой john.doe@example.com");
@@ -144,9 +167,10 @@ public class BusinessPlannerApplication {
                 "ID: " + task.getId() + 
                 ", Название: " + task.getTitle() + 
                 ", Описание: " + task.getDescription()
-            ));*/
-            System.out.println("start of 2nd test AAAAAAAAAAAA");
-            // Получаем задачи для пользователя с email "jane.smith@example.com" и тегом с ID = 1
+            ));
+            System.out.println("start of 2nd test AAAAAAAAAAAA");*/
+
+            // Получаем задачи для пользователя с email "jane.smith@example.com" и тегом с ID = 3
             String email = "jane.smith@example.com";
             Long tagId = 3L;
             System.out.println("vot tut AAAAAAAAAAAA");
@@ -158,8 +182,34 @@ public class BusinessPlannerApplication {
                 ", Название: " + task.getTitle() + 
                 ", Описание: " + task.getDescription()
             ));
+
+            // Получаем задачи для пользователя с email "john.doe@example.com" и тегом с ID = 1
+            String email_2 = "john.doe@example.com";
+            Long tagId_2 = 1L;
+            List<Task> tasks_2 = taskService.getTasksByUserEmailAndTagId(email_2, tagId_2);
+            System.out.println("Задачи для пользователя " + email_2 + " с тегом (ID: " + tagId_2 + "):");
+            tasks_2.forEach(task -> System.out.println(
+                "ID: " + task.getId() + 
+                ", Название: " + task.getTitle() + 
+                ", Описание: " + task.getDescription()
+            ));
             System.out.println("end of 2nd test AAAAAAAAAAAA");
+
+
+        
+            User user3 = new User();
+            user3.setName("Bradly Donkey");
+            user3.setEmail("donkey@example.com");
+            user3.setPassword("password123");
+            userRepository.save(user3);
             
+            System.out.println("start of 3rd test");
+            // Удаляем пользователя по email
+            String emailToDelete = "donkey@example.com";
+            userService.deleteUserByEmail(emailToDelete);
+            System.out.println("Пользователь с email " + emailToDelete + " удалён.");
+            System.out.println("end of 3rd test");
+
         };
     }
 }

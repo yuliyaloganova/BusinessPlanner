@@ -62,4 +62,12 @@ public class TaskController {
         List<Task> tasks = taskService.getTasksByUserEmailAndTagId(email, tagId);
         return ResponseEntity.ok(tasks);
     }
+
+    @DeleteMapping("/user/{email}/tag/{tagName}")
+    public ResponseEntity<String> deleteTasksByUserEmailAndTagName(
+            @PathVariable String email,
+            @PathVariable String tagName) {
+        taskService.deleteTasksByUserEmailAndTagName(email, tagName);
+        return ResponseEntity.ok("Задачи пользователя с email " + email + " и тегом '" + tagName + "' удалены.");
+    }
 }

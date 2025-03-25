@@ -5,6 +5,7 @@ import com.businessplanner.models.Task;
 import com.businessplanner.models.User;
 import com.businessplanner.repositories.TagRepository;
 import com.businessplanner.repositories.TaskRepository;
+import com.businessplanner.repositories.TaskTagRepository;
 import com.businessplanner.repositories.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class TaskService {
     @Autowired
     private TagRepository tagRepository;
 
+    @Autowired
+    private TaskTagRepository taskTagRepository;
+
     // Создать задачу
     public Task createTask(Task task) {
         return taskRepository.save(task);
@@ -43,8 +47,12 @@ public class TaskService {
     }
 
     // Удалить задачу по id
-    public void deleteTask(Long id) {
-        taskRepository.deleteById(id);
+    @Transactional  // Указываем, что метод должен выполняться в транзакции
+    public void deleteTask(Long taskId) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new RuntimeException("Task not found"));  // или кастомное исключение
+        task.getTags().clear();  // Удаляем связи с тегами
+        taskRepository.delete(task);  // Удаляем саму задачу
     }
 
     public List<Task> getTasksByUserEmailAndTag(String email, String tagName) {
@@ -97,5 +105,29 @@ public class TaskService {
                 .filter(task -> task.getTaskTags().stream()
                         .anyMatch(taskTag -> taskTag.getTag().equals(tag)))
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void deleteTasksByUserEmailAndTagName(String email, String tagName) {
+        // Находим пользователя по email
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+
+        // Находим тег по названию
+        Tag tag = tagRepository.findByName(tagName)
+                .orElseThrow(() -> new RuntimeException("Tag not found with name: " + tagName));
+
+        // Получаем все задачи пользователя
+        List<Task> userTasks = taskRepository.findByCreator(user);
+
+        // Удаляем задачи, связанные с указанным тегом
+        userTasks.forEach(task -> {
+            if (task.getTaskTags().stream().anyMatch(taskTag -> taskTag.getTag().equals(tag))) {
+                // Удаляем связи между задачей и тегами
+                taskTagRepository.deleteByTaskId(task.getId());
+                // Удаляем саму задачу
+                taskRepository.delete(task);
+            }
+        });
     }
 }
