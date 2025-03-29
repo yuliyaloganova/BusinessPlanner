@@ -7,10 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 //import com.businessplanner.models.TaskStatus;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Data
 @Entity
 @Table(name = "tasks")
 public class Task {
+    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,10 +27,12 @@ public class Task {
     @Column(name = "due_date")
     private LocalDateTime dueDate;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "creator_id", nullable = false)
     private User creator;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TaskTag> taskTags = new ArrayList<>();
 

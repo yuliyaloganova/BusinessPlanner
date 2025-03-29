@@ -1,5 +1,7 @@
 package com.businessplanner.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -15,10 +17,12 @@ public class TaskTag {
     @Version 
     private Long version;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "task_id", nullable = false)
     private Task task;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "tag_id", nullable = false)
     private Tag tag;

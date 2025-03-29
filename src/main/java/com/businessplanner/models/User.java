@@ -5,6 +5,9 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Data
 @Entity
@@ -21,13 +24,16 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @JsonIgnore
     @Column(nullable = false)
     private String password;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Task> tasks = new ArrayList<>();
 
     // Метод для хеширования пароля
+    //@JsonProperty
     public void setPassword(String password) {
         //BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         //this.password = encoder.encode(password);
