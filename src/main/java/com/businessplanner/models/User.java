@@ -5,7 +5,7 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Data
 @Entity
 @Table(name = "users")
@@ -29,8 +29,9 @@ public class User {
 
     // Метод для хеширования пароля
     public void setPassword(String password) {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        this.password = encoder.encode(password);
+        //BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        //this.password = encoder.encode(password);
+        this.password = password;
     }
 
     public Long getId() {

@@ -4,6 +4,7 @@ com\businessplanner\services\UserService.class
 com\businessplanner\controllers\TagController.class
 com\businessplanner\repositories\TaskRepository.class
 com\businessplanner\repositories\TagRepository.class
+com\businessplanner\config\SecurityConfig.class
 com\businessplanner\services\TagService.class
 com\businessplanner\controllers\TaskController.class
 com\businessplanner\models\Tag.class
