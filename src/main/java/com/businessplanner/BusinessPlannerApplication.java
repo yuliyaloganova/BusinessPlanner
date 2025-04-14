@@ -47,7 +47,7 @@ public class BusinessPlannerApplication {
     }
 
     @Bean
-    public CommandLineRunner demo() {
+    CommandLineRunner demo() {
         return (args) -> {
             // Создаём тестовых пользователей
             User user1 = new User();
