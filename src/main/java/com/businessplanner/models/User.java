@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Collection;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,6 +36,14 @@ public class User implements UserDetails{
     @JsonIgnore
     @Column(nullable = false)
     private String password;
+
+    @Column(name = "is_active", nullable = false)
+    @Builder.Default
+    private boolean active = true; // По умолчанию активирован
+
+    @Column(name = "is_locked", nullable = false)
+    @Builder.Default
+    private boolean locked = false; // По умолчанию не заблокирован
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -118,5 +125,30 @@ public class User implements UserDetails{
     public boolean isEnabled() {
         return true;
     }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+
+    public Role getRole() {
+        return this.role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
 }
 

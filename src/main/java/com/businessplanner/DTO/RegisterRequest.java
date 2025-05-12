@@ -1,7 +1,12 @@
 package com.businessplanner.DTO;
 
-public record RegisterRequest(
-        String name,
-        String email,
-        String password
-) {}
+import lombok.Builder;
+import lombok.Getter;
+
+@Getter
+@Builder
+public class RegisterRequest {
+    private String name;
+    private String email;
+    private String password;
+}

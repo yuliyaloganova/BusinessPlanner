@@ -4,6 +4,7 @@ import com.businessplanner.models.Tag;
 import com.businessplanner.services.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,12 +18,14 @@ public class TagController {
 
     // Создать тег
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     public Tag createTag(@RequestBody Tag tag) {
         return tagService.createTag(tag);
     }
 
     // Обновить тег
     @PutMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Tag> updateTag(@PathVariable Long id, @RequestBody Tag tagDetails) {
         Tag updatedTag = tagService.updateTag(id, tagDetails);
         return ResponseEntity.ok(updatedTag);
@@ -30,6 +33,7 @@ public class TagController {
 
     // Получить тег по ID
     @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Tag> getTagById(@PathVariable Long id) {
         return tagService.getTagById(id)
                 .map(ResponseEntity::ok)
@@ -38,6 +42,7 @@ public class TagController {
 
     // Удалить тег
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteTag(@PathVariable Long id) {
         tagService.deleteTag(id);
         
@@ -46,6 +51,7 @@ public class TagController {
 
     // Получить все теги
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public List<Tag> getAllTags() {
         return tagService.getAllTags();
     }

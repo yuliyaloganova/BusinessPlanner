@@ -11,9 +11,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
-import java.util.Optional;
+//import java.util.Optional;
 //import java.time.LocalDate;
 //import java.util.Set;
 
@@ -53,16 +54,19 @@ public class BusinessPlannerApplication {
             User user1 = new User();
             user1.setName("John Doe");
             user1.setEmail("john.doe@example.com");
-            //user1.setPassword(passwordEncoder.encode("password123"));
-            user1.setPassword("password123");
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(8);
+            user1.setPassword(passwordEncoder.encode("password123"));
+            //user1.setPassword("password123");
+            user1.setRole(Role.ADMIN);
 
             userRepository.save(user1);
 
             User user2 = new User();
             user2.setName("Jane Smith");
             user2.setEmail("jane.smith@example.com");
-            //user2.setPassword(passwordEncoder.encode("password456"));
-            user2.setPassword("password456");
+            user2.setPassword(passwordEncoder.encode("password456"));
+            //user2.setPassword("password456");
+            user2.setRole(Role.USER);
 
             userRepository.save(user2);
 

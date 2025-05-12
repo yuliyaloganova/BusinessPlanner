@@ -4,6 +4,7 @@ import com.businessplanner.models.Task;
 import com.businessplanner.services.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,12 +18,14 @@ public class TaskController {
 
     // Создать задачу
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     public Task createTask(@RequestBody Task task) {
         return taskService.createTask(task);
     }
 
     // Получить задачу по id
     @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
         return taskService.getTaskById(id)
                 .map(ResponseEntity::ok)
@@ -31,12 +34,14 @@ public class TaskController {
 
     // Получить задачи по id создателя
     @GetMapping("/creator/{creatorId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<Task> getTasksByCreatorId(@PathVariable Long creatorId) {
         return taskService.getTasksByCreatorId(creatorId);
     }
 
     // Обновить задачу
     @PutMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task taskDetails) {
         Task updatedTask = taskService.updateTask(id, taskDetails);
         
@@ -45,6 +50,7 @@ public class TaskController {
 
     // Удалить задачу
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
         taskService.deleteTask(id);
         return ResponseEntity.noContent().build();
@@ -52,11 +58,13 @@ public class TaskController {
 
     // Получить все задачи
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public List<Task> getAllTasks() {
         return taskService.getAllTasks();
     }
 
     @GetMapping("/user/{email}/tag/{tagId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Task>> getTasksByUserEmailAndTagId(
             @PathVariable String email,
             @PathVariable Long tagId) {
@@ -65,6 +73,7 @@ public class TaskController {
     }
 
     @DeleteMapping("/user/{email}/tag/{tagName}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteTasksByUserEmailAndTagName(
             @PathVariable String email,
             @PathVariable String tagName) {

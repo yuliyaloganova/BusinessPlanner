@@ -2,10 +2,14 @@ package com.businessplanner.services;
 
 import com.businessplanner.models.User;
 import com.businessplanner.repositories.UserRepository;
+import com.businessplanner.security.UserDetailsImpl;
 
 import jakarta.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +17,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
 
+    //private final UserRepository userRepository;
+    
     //@Autowired
     //private PasswordEncoder passwordEncoder;
 
@@ -67,4 +73,17 @@ public class UserService {
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
+
+    //последним искали почему метод-ошибка. 
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> 
+                new UsernameNotFoundException("User not found with email: " + email));
+
+        return new UserDetailsImpl(user); // Преобразование User → UserDetails
+        
+    }
+
 }
