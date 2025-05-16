@@ -29,8 +29,6 @@ import com.businessplanner.services.UserService;
 public class SecurityConfig {
 
     private final JwtAuthEntryPoint authEntryPoint;
-
-
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
 

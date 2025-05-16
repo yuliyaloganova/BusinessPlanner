@@ -35,8 +35,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
-            @NonNull HttpServletRequest request,
-            @NonNull HttpServletResponse response,
+            @NonNull HttpServletRequest request, // Входящий HTTP-запрос
+            @NonNull HttpServletResponse response, // Исходящий HTTP-ответ
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
         try {
