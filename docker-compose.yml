@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  postgres:
+    build:
+      context: .
+      dockerfile: DockerfileDB
+    container_name: businessplanner_db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: businessplanner
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - businessplanner_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d businessplanner"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: DockerfileAPP
+    container_name: businessplanner_app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/businessplanner
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+    networks:
+      - businessplanner_network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  businessplanner_network:
