@@ -1,8 +1,6 @@
 package com.businessplanner.services;
 
-import com.businessplanner.models.Tag;
-import com.businessplanner.models.Task;
-import com.businessplanner.models.User;
+import com.businessplanner.models.*;
 import com.businessplanner.repositories.TagRepository;
 import com.businessplanner.repositories.TaskRepository;
 import com.businessplanner.repositories.TaskTagRepository;
@@ -11,6 +9,8 @@ import com.businessplanner.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +31,38 @@ public class TaskService {
     @Autowired
     private TaskTagRepository taskTagRepository;
 
+    public TaskService(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Task> getFilteredTasks(String tag, String status, Pageable pageable) {
+        TaskStatus taskStatus = null;
+        if (status != null && !status.isEmpty()) {
+            try {
+                taskStatus = TaskStatus.valueOf(status.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                // Если статус невалидный, просто игнорируем его
+            }
+        }
+        
+        return taskRepository.findFilteredTasks(
+            tag,
+            taskStatus,
+            pageable
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public List<Task> getTasksByTag(String tag) {
+        return taskRepository.findByTagName(tag);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Task> getTasksByCreator(User creator, Pageable pageable) {
+        return taskRepository.findByCreator(creator, pageable);
+    }
+    
     // Создать задачу
     public Task createTask(Task task) {
         return taskRepository.save(task);
@@ -51,7 +83,7 @@ public class TaskService {
     public void deleteTask(Long taskId) {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new RuntimeException("Task not found"));  // или кастомное исключение
-        task.getTags().clear();  // Удаляем связи с тегами
+        taskTagRepository.deleteByTaskId(taskId);  // Удаляем связи с тегами
         taskRepository.delete(task);  // Удаляем саму задачу
     }
 
@@ -130,4 +162,85 @@ public class TaskService {
             }
         });
     }
+
+    public Task createTaskWithTags(Task task, String tagsInput) {
+        Task taskToSave = task; // или создайте новый экземпляр, если нужно
+
+        if (tagsInput != null && !tagsInput.trim().isEmpty()) {
+            String[] tagNames = tagsInput.split(",");
+            for (String tagName : tagNames) {
+                tagName = tagName.trim();
+                if (!tagName.isEmpty()) {
+                    String currentTagName = tagName; // effectively final копия
+                    Tag tag = tagRepository.findByName(currentTagName)
+                            .orElseGet(() -> {
+                                Tag newTag = new Tag();
+                                newTag.setName(currentTagName);
+                                return tagRepository.save(newTag);
+                            });
+                    taskToSave.addTag(tag);
+                }
+            }
+        }
+
+        return taskRepository.save(taskToSave);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Task> getFilteredTasksForUser(
+            User user,
+            String tag,
+            TaskStatus status,
+            Priority priority,
+            Pageable pageable) {
+
+        // Реализация метода в репозитории
+        return taskRepository.findFilteredTasksForUser(
+                user,
+                tag,
+                status,
+                priority,
+                pageable
+        );
+    }
+
+    @Transactional
+    public Task updateTaskWithTags(Long taskId, Long userId, Task taskDetails, String tagsInput) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new RuntimeException("Task not found"));
+
+        if (!task.getCreator().getId().equals(userId)) {
+            throw new RuntimeException("Access denied");
+        }
+
+        // Обновляем основные поля
+        task.setTitle(taskDetails.getTitle());
+        task.setDescription(taskDetails.getDescription());
+        task.setDueDate(taskDetails.getDueDate());
+        task.setStatus(taskDetails.getStatus());
+        task.setPriority(taskDetails.getPriority());
+
+        // Обновляем теги, если они указаны
+        if (tagsInput != null && !tagsInput.trim().isEmpty()) {
+            task.getTags().clear();
+
+            String[] tagNames = tagsInput.split(",");
+            for (String tagName : tagNames) {
+                tagName = tagName.trim();
+                if (!tagName.isEmpty()) {
+                    String finalTagName = tagName;  // Создаем effectively final копию
+                    Tag tag = tagRepository.findByName(finalTagName)
+                            .orElseGet(() -> {
+                                Tag newTag = new Tag();
+                                newTag.setName(finalTagName);  // Теперь корректно
+                                return tagRepository.save(newTag);
+                            });
+                    task.addTag(tag);
+                }
+            }
+        }
+
+        return taskRepository.save(task);
+    }
+
 }

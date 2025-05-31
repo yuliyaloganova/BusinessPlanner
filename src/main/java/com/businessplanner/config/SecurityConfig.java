@@ -2,6 +2,7 @@ package com.businessplanner.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 //import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
@@ -31,11 +32,13 @@ public class SecurityConfig {
     private final JwtAuthEntryPoint authEntryPoint;
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
+    private final PasswordEncoder passwordEncoder;
 
-    public SecurityConfig(JwtAuthEntryPoint authEntryPoint,  JwtTokenProvider jwtTokenProvider,UserService userService) {
-        this.userService = userService;
+    public SecurityConfig(JwtAuthEntryPoint authEntryPoint, UserService userService, JwtTokenProvider jwtTokenProvider, PasswordEncoder passwordEncoder) {
         this.authEntryPoint = authEntryPoint;
+        this.userService = userService;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Bean
@@ -47,7 +50,7 @@ public class SecurityConfig {
     public AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService());
-        provider.setPasswordEncoder(passwordEncoder());
+        provider.setPasswordEncoder(passwordEncoder);
         return provider;
     }
 
@@ -69,10 +72,14 @@ public class SecurityConfig {
                                 jwtTokenProvider,
                                 userService),
                         UsernamePasswordAuthenticationFilter.class)
-                .formLogin(
-                    form -> form
-            .permitAll()
-            .usernameParameter("email")
+                .formLogin(form -> form
+                        .loginPage("/auth/login")  // Указываем кастомную страницу входа
+                        .loginProcessingUrl("/auth/login")  // URL для обработки формы входа
+                        .defaultSuccessUrl("/tasks", true)  // Перенаправление после успешного входа
+                        .failureUrl("/auth/login?error=true")  // Перенаправление при ошибке
+                        .usernameParameter("email")  // Параметр для email
+                        .passwordParameter("password")  // Параметр для пароля
+                        .permitAll()
                 ).build();
 
         
@@ -81,10 +88,5 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 }

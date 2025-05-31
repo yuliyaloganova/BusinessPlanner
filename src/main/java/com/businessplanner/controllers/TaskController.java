@@ -19,6 +19,8 @@ public class TaskController {
     // Создать задачу
     @PostMapping
     @PreAuthorize("isAuthenticated()")
+    //public ResponseEntity<Task> createTask(@RequestBody Task task) { //для 4 лабы
+        //return ResponseEntity.ok(taskService.createTask(task)); //
     public Task createTask(@RequestBody Task task) {
         return taskService.createTask(task);
     }

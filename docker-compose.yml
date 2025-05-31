@@ -6,16 +6,20 @@ services:
       context: .
       dockerfile: DockerfileDB
     container_name: businessplanner_db
+
+    # настройки постгрес
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: businessplanner
     ports:
       - "5432:5432"
+    # Сохраняет данные БД при перезапуске
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - businessplanner_network
+    # готовность БД
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U admin -d businessplanner"]
       interval: 5s
@@ -43,5 +47,6 @@ services:
 volumes:
   postgres_data:
 
+ # сеть для связи контейнеров (для изоляции)
 networks:
   businessplanner_network:

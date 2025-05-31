@@ -1,5 +1,6 @@
 package com.businessplanner.services;
 
+import com.businessplanner.models.Role;
 import com.businessplanner.models.User;
 import com.businessplanner.repositories.UserRepository;
 import com.businessplanner.security.UserDetailsImpl;
@@ -10,7 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-//import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,24 +24,23 @@ public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
-    //private final UserRepository userRepository;
-    
-    //@Autowired
-    //private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     // Создать пользователя
     public User createUser(User user) {
-        user.setPassword(user.getPassword());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setActive(true);
+        user.setRole(Role.USER);
         return userRepository.save(user);
     }
-    
 
     // Получить пользователя по id
     public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
     }
 
-    // Получить пользователя по emai
+    // Получить пользователя по email
     public Optional<User> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }

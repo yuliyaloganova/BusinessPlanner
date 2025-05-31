@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-//import com.businessplanner.models.TaskStatus;
+
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -23,6 +23,12 @@ public class Task {
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    @Enumerated(EnumType.STRING)
+    private TaskStatus status = TaskStatus.OPEN;
+
+    @Enumerated(EnumType.STRING)
+    private Priority priority = Priority.MEDIUM; // Значение по умолчанию
 
     @Column(name = "due_date")
     private LocalDateTime dueDate;
@@ -43,8 +49,14 @@ public class Task {
         inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
 
-    
     private List<Tag> tags;
+
+    public void addTag(Tag tag) {
+        if (this.tags == null) {
+            this.tags = new ArrayList<>();
+        }
+        this.tags.add(tag);
+    }
 
     public List<TaskTag> getTaskTags() {
         return taskTags;
@@ -54,8 +66,3 @@ public class Task {
         this.taskTags = taskTags;
     }
 }
-
-/*public enum TaskStatus {
-    PENDING, IN_PROGRESS, COMPLETED
-}*/
-

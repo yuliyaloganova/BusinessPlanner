@@ -1,6 +1,7 @@
 package com.businessplanner.services;
 
 import com.businessplanner.models.Tag;
+import com.businessplanner.models.User;
 import com.businessplanner.repositories.TagRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,10 @@ public class TagService {
     // Получить все теги
     public List<Tag> getAllTags() {
         return tagRepository.findAll();
+    }
+
+    public List<Tag> getAllTagsByCreator(User user) {
+        return tagRepository.findTagsByUser(user);
     }
 
 }

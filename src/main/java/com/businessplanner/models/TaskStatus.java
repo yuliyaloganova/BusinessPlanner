@@ -1,5 +1,8 @@
 package com.businessplanner.models;
 
 public enum TaskStatus {
-    PENDING, IN_PROGRESS, COMPLETED
+    OPEN,          // Задача открыта
+    IN_PROGRESS,   // В работе
+    DONE,          // Завершена
+    CANCELLED      // Отменена
 }
